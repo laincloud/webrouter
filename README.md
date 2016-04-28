@@ -25,17 +25,21 @@ Webrouter的工作流程如下图：
 ![Webrouter工作流程](webrouter.png)
 
 其工作流程为：
+
 1.  **watcher**从lainlet中获取`extra_domains`和`ssl`的配置信息。
-2.  监听**lainlet**的`/v2/webrouter/webprocs`接口。当有应用的web proc更新时， **watcher**会从监听中获得web proc的`containerIP`，`expose`和`mountpoint`。
-3.  **watcher**根据1和2中的数据生成新的**tengine**配置文件。
 
-> 生成配置文件在`/etc/nginx/`下，包括以下三类：
-> - server: 定义了`appname.domain`以及 web proc的`mountpoint`里写的域。同时还包括访问该`appname.domain`时，是否支持HTTPs，如果支持则还指定了证书位置。文件位置为`conf.d/appname.domain.conf`。
-> - upstream: 定义了`appname.domain`以及 web proc的`mountpoint`里写的域。同时还包括访问该`appname.domain`时，是否支持HTTPs，如果支持则还指定了证书位置。文件位置为`upstreams/appname.upstreams`。
-> - location: 针对lain.yaml中配置的`mountpoint`，定义了访问该`mountpoint`时实际对应的upstream，以及相应的访问日志位置。文件位置为`locations/mountpoint/upstream_name`。
+1.  监听**lainlet**的`/v2/webrouter/webprocs`接口。当有应用的web proc更新时， **watcher**会从监听中获得web proc的`containerIP`，`expose`和`mountpoint`。
 
-4.  **watcher**通知**tengine**重新加载DNS配置文件，并重新进入监听状态。
-5.  **tengine**重新加载配置文件，更新完成。
+1.  **watcher**根据1和2中的数据生成新的**tengine**配置文件。
+
+    > 生成配置文件在`/etc/nginx/`下，包括以下三类：
+    > - server: 定义了`appname.domain`以及 web proc的`mountpoint`里写的域。同时还包括访问该`appname.domain`时，是否支持HTTPs，如果支持则还指定了证书位置。文件位置为`conf.d/appname.domain.conf`。
+    > - upstream: 定义了`appname.domain`以及 web proc的`mountpoint`里写的域。同时还包括访问该`appname.domain`时，是否支持HTTPs，如果支持则还指定了证书位置。文件位置为`upstreams/appname.upstreams`。
+    > - location: 针对lain.yaml中配置的`mountpoint`，定义了访问该`mountpoint`时实际对应的upstream，以及相应的访问日志位置。文件位置为`locations/mountpoint/upstream_name`。
+
+1.  **watcher**通知**tengine**重新加载DNS配置文件，并重新进入监听状态。
+
+1.  **tengine**重新加载配置文件，更新完成。
 
 ## License
 Webrouter遵循[MIT](https://github.com/laincloud/webrouter/blob/master/LICENSE)开源协议.
