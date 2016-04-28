@@ -1,0 +1,14 @@
+{% for uri in uri_list %}
+    {% if uri == '/' or uri == '' %}
+    location / {
+        proxy_pass  http://{{ upstream_name }};
+		access_log  /var/log/nginx/{{ server }}___{{ upstream_name }}.access.log  main;
+    }
+    {% else %}
+    location /{{ uri }}/ {
+        rewrite /{{ uri }}/(.*) /$1 break;
+        proxy_pass  http://{{ upstream_name }};
+		access_log  /var/log/nginx/{{ server }}___{{ upstream_name }}.access.log  main;
+    }
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,35 @@
+server {
+    {% if internal_domain %}
+    listen  80;
+    {% if ssl_name %}
+    listen  443 ssl;
+    {% endif %}
+    {% else %}
+    listen  80;
+    listen  8080;
+    {% if ssl_name %}
+    listen  443 ssl;
+    listen  8443 ssl;
+    {% endif %}
+    {% endif %}
+    server_name  .{{ server }};
+    {% if ssl_name %}
+    ssl_certificate /etc/nginx/ssl/{{ ssl_name }}.crt;
+    ssl_certificate_key /etc/nginx/ssl/{{ ssl_name }}.key;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers  HIGH:!aNULL:!MD5;
+    {% endif %}
+    include proxy.conf;
+
+    {% if https_only %}
+    # xproto is set in proxy.conf, it maintains the original scheme
+    # used by the first http client (user's browser), no matter how
+    # many levels of nginx are involved.
+    if ($xproto != https) {
+        return 301 https://$server_name$request_uri;
+    }
+    {% endif %}
+
+    include locations/{{ server }}/*.location;
+
+}

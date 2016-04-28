@@ -1,0 +1,36 @@
+appname: webrouter
+
+build:
+  base: laincloud/centos-lain-webrouter:20160428
+  prepare:
+    version: "200"
+    script:
+      - pip install -r pip-req.txt
+  script:
+
+test:
+  script:
+    - mkdir -p /var/log/watcher
+    - make test-cov
+
+worker:
+  cmd: /usr/bin/supervisord
+  env:
+    - LAINLET_PORT=9001
+    - GRAPHITE_PORT=2003
+  memory: 256m
+  volumes:
+    - /etc/nginx/nginx.conf
+    - /etc/nginx/proxy.conf
+    - /etc/nginx/default.conf
+    - /etc/nginx/conf.d
+    - /etc/nginx/upstreams
+    - /etc/nginx/locations
+    - /etc/nginx/buffer
+    - /etc/nginx/ssl
+    - /var/log/nginx
+    - /var/log/watcher
+    - /var/log/supervisor
+
+notify:
+  slack: "#lain"

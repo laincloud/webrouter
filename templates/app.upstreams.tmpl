@@ -1,0 +1,20 @@
+{% for u in upstreams %}
+upstream {{ u.name }} {
+{% if u.backends %}
+{% for b in u.backends %}
+    server {{ b }} weight=10;
+{% endfor %}
+{% else %}
+    # workaround:
+    # if no backend detected
+    # insert a fake backend
+    # to avoid nginx reload failure
+    server 127.0.0.1:3000 weight=10;
+{% endif %}
+{% if u.healthcheck %}
+    check interval=3000 rise=2 fall=5 timeout=1000 type=http;
+    check_http_send "GET {{ u.healthcheck_path }} HTTP/1.0\r\n\r\n";
+    check_http_expect_alive http_2xx http_3xx;
+{% endif %}
+}
+{% endfor %}
