@@ -1,7 +1,7 @@
 appname: webrouter
 
 build:
-  base: laincloud/centos-lain-webrouter:20160428
+  base: laincloud/centos-lain-webrouter:20160503
   prepare:
     version: "200"
     script:
