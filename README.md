@@ -1,4 +1,5 @@
 # Webrouter
+[![MIT license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 ## Introduction
 作为LAIN中layer1的重要应用，Webrouter对外提供了对集群内应用的HTTP/HTTPs的访问功能，是外部客户端访问LAIN中Web应用的唯一入口。所有访问`http://mountpoint/location`和`https://mountpoint/location`的请求都会发送到Webrouter中，并转发至其配置的upstream。
