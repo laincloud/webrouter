@@ -1,12 +1,13 @@
 appname: webrouter
 
 build:
-  base: laincloud/centos-lain-webrouter:20160503
+  base: laincloud/centos-lain-webrouter:20170227
   prepare:
-    version: "200"
+    version: "201"
     script:
       - pip install -r pip-req.txt
   script:
+    - cp logrotate.d/* /etc/logrotate.d/
 
 test:
   script:
