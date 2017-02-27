@@ -1,0 +1,12 @@
+/var/log/tengine/*log {
+    create 0644 nginx nginx
+    daily
+    rotate 5
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        /bin/kill -USR1 `cat /var/run/nginx.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}

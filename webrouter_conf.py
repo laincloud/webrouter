@@ -55,10 +55,11 @@ def get_apps_from_lainlet(data):
         proc["annotation"] = proc_info["PodInfos"][0]["Annotation"]
         proc["containers"] = []
         for c in proc_info["PodInfos"]:
-            proc["containers"].append({
-                "container_ip": c["ContainerInfos"][0]["ContainerIp"],
-                "container_port": c["ContainerInfos"][0]["Expose"],
-            })
+            if len(c["ContainerInfos"]) > 0:
+                proc["containers"].append({
+                    "container_ip": c["ContainerInfos"][0]["ContainerIp"],
+                    "container_port": c["ContainerInfos"][0]["Expose"],
+                })
         if app_name in apps:
             apps[app_name].append(proc)
         else:
