@@ -3,7 +3,7 @@ appname: webrouter
 build:
   base: laincloud/centos-lain-webrouter:20170227
   prepare:
-    version: "201"
+    version: "230"
     script:
       - pip install -r pip-req.txt
   script:
