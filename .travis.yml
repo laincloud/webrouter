@@ -14,6 +14,11 @@ script:
   - lain config save-global private_docker_registry 'registry.lain.local'
   - lain build
   - lain test
+  - LAIN_APPNAME=webrouter
+  - LAIN_IMAGE_VERSION="$(git show -s --format=%ct $TRAVIS_COMMIT)-$TRAVIS_COMMIT"
+  - ci_env=`bash <(curl -s https://codecov.io/env)`
+  - docker run $ci_env --name webrouter-build $LAIN_APPNAME:build-$LAIN_IMAGE_VERSION bash -c 'rm -rf * && yum install -y git && git clone https://github.com/laincloud/webrouter && cd webrouter && pip install codecov && pip install -r pip-req.txt && mkdir -p /var/log/watcher && make test-cov && bash <(curl -s https://codecov.io/bash) && codecov'
+
 
 after_success:
   - LAIN_APPNAME=webrouter
